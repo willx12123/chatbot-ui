@@ -29,10 +29,10 @@ import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
 import { ChatLoader } from './ChatLoader';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
+import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
-import { MemoizedChatMessage } from './MemoizedChatMessage';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -68,6 +68,34 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const handleSingleMessageModeChange = useCallback(
+    (val: boolean) => {
+      if (!selectedConversation) {
+        return;
+      }
+
+      const newSelectedConversation = {
+        ...selectedConversation,
+        singleMessageModel: val,
+      };
+
+      const updatedConversations = conversations.map((c) =>
+        c.id !== selectedConversation?.id ? c : newSelectedConversation,
+      );
+
+      homeDispatch({
+        field: 'selectedConversation',
+        value: newSelectedConversation,
+      });
+      homeDispatch({ field: 'conversations', value: updatedConversations });
+      saveConversations(updatedConversations);
+      saveConversation(newSelectedConversation);
+
+      toast.success(`当前聊天已${val ? '切换至' : '关闭'}「单消息」模式`);
+    },
+    [conversations, selectedConversation],
+  );
+
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
       if (selectedConversation) {
@@ -95,7 +123,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         homeDispatch({ field: 'messageIsStreaming', value: true });
         const chatBody: ChatBody = {
           model: updatedConversation.model,
-          messages: updatedConversation.messages,
+          messages: updatedConversation.singleMessageModel
+            ? updatedConversation.messages.slice(-1)
+            : updatedConversation.messages,
           key: apiKey,
           prompt: updatedConversation.prompt,
           temperature: updatedConversation.temperature,
@@ -499,6 +529,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               handleSend(message, 0, plugin);
             }}
             onScrollDownClick={handleScrollDown}
+            singleMessageMode={selectedConversation?.singleMessageModel}
+            handleSingleMessageModeChange={handleSingleMessageModeChange}
             onRegenerate={() => {
               if (currentMessage) {
                 handleSend(currentMessage, 2, null);
