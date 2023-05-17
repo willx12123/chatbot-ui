@@ -35,5 +35,7 @@
   "Temperature": "生成温度",
   "Precise": "保守",
   "Neutral": "中立",
-  "Creative": "随性"
+  "Creative": "随性",
+  "Enter a value for": "输入你所需要的",
+  "Submit": "提交"
 }

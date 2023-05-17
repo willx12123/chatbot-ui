@@ -23,6 +23,7 @@ interface Props<T> {
   handleCreateItem: () => void;
   handleCreateFolder: () => void;
   handleDrop: (e: any) => void;
+  additionTop?: JSX.Element;
 }
 
 const Sidebar = <T,>({
@@ -39,6 +40,7 @@ const Sidebar = <T,>({
   handleCreateItem,
   handleCreateFolder,
   handleDrop,
+  additionTop,
 }: Props<T>) => {
   const { t } = useTranslation('promptbar');
 
@@ -59,6 +61,7 @@ const Sidebar = <T,>({
       <div
         className={`fixed top-0 ${side}-0 z-40 flex h-full w-[260px] flex-none flex-col space-y-2 bg-[#202123] p-2 text-[14px] transition-all sm:relative sm:top-0`}
       >
+        {additionTop}
         <div className="flex items-center">
           <button
             className="text-sidebar flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-white transition-colors duration-200 hover:bg-gray-500/10"

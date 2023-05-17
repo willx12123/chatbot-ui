@@ -1,4 +1,6 @@
+import { IconPlus } from '@tabler/icons-react';
 import { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { useCreateReducer } from '@/hooks/useCreateReducer';
@@ -17,8 +19,11 @@ import { Prompts } from './components/Prompts';
 import Sidebar from '../Sidebar';
 import PromptbarContext from './PromptBar.context';
 import { PromptbarInitialState, initialState } from './Promptbar.state';
+import { addDefaultPrompts } from './default-prompts';
 
 import { v4 as uuidv4 } from 'uuid';
+
+const DEFAULT_PROMPTS_INITIALED = '__prompts_initialed';
 
 const Promptbar = () => {
   const { t } = useTranslation('promptbar');
@@ -42,6 +47,22 @@ const Promptbar = () => {
     homeDispatch({ field: 'showPromptbar', value: !showPromptbar });
     localStorage.setItem('showPromptbar', JSON.stringify(!showPromptbar));
   };
+
+  function createDefaultPrompts() {
+    if (!defaultModelId) {
+      return;
+    }
+
+    const [newPrompts, successAdd] = addDefaultPrompts(prompts, defaultModelId);
+    if (successAdd === 0) {
+      toast.success('默认提示已全部存在，无需添加');
+    } else {
+      toast.success(`成功添加 ${successAdd} 个默认提示`);
+    }
+
+    homeDispatch({ field: 'prompts', value: newPrompts });
+    savePrompts(newPrompts);
+  }
 
   const handleCreatePrompt = () => {
     if (defaultModelId) {
@@ -116,6 +137,20 @@ const Promptbar = () => {
     }
   }, [searchTerm, prompts]);
 
+  const defaultPromptsInitialed = () =>
+    Boolean(localStorage.getItem(DEFAULT_PROMPTS_INITIALED));
+  const setDefaultPromptsInitialed = () =>
+    localStorage.setItem(DEFAULT_PROMPTS_INITIALED, '1');
+
+  useEffect(() => {
+    if (defaultPromptsInitialed()) {
+      return;
+    }
+
+    createDefaultPrompts();
+    setDefaultPromptsInitialed();
+  }, [prompts, defaultModelId]);
+
   return (
     <PromptbarContext.Provider
       value={{
@@ -128,6 +163,14 @@ const Promptbar = () => {
       <Sidebar<Prompt>
         side={'right'}
         isOpen={showPromptbar}
+        additionTop={
+          <button
+            className="text-sidebar flex w-full flex-shrink-0 cursor-pointer select-none items-center gap-3 rounded-md border border-white/20 p-3 text-white transition-colors duration-200 hover:bg-gray-500/10"
+            onClick={createDefaultPrompts}
+          >
+            <IconPlus size={16} /> 添加常用提示
+          </button>
+        }
         addItemButtonTitle={t('New prompt')}
         itemComponent={
           <Prompts
