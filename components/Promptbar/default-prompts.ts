@@ -59,3 +59,11 @@ export function addDefaultPrompts(
 
   return [ret, successAdd];
 }
+
+const DEFAULT_PROMPTS_INITIALED = '__prompts_initialed';
+
+export const defaultPromptsInitialed = () =>
+  Boolean(localStorage.getItem(DEFAULT_PROMPTS_INITIALED));
+
+export const setDefaultPromptsInitialed = () =>
+  localStorage.setItem(DEFAULT_PROMPTS_INITIALED, '1');

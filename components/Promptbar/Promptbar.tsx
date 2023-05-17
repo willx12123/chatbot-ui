@@ -19,11 +19,13 @@ import { Prompts } from './components/Prompts';
 import Sidebar from '../Sidebar';
 import PromptbarContext from './PromptBar.context';
 import { PromptbarInitialState, initialState } from './Promptbar.state';
-import { addDefaultPrompts } from './default-prompts';
+import {
+  addDefaultPrompts,
+  defaultPromptsInitialed,
+  setDefaultPromptsInitialed,
+} from './default-prompts';
 
 import { v4 as uuidv4 } from 'uuid';
-
-const DEFAULT_PROMPTS_INITIALED = '__prompts_initialed';
 
 const Promptbar = () => {
   const { t } = useTranslation('promptbar');
@@ -136,11 +138,6 @@ const Promptbar = () => {
       promptDispatch({ field: 'filteredPrompts', value: prompts });
     }
   }, [searchTerm, prompts]);
-
-  const defaultPromptsInitialed = () =>
-    Boolean(localStorage.getItem(DEFAULT_PROMPTS_INITIALED));
-  const setDefaultPromptsInitialed = () =>
-    localStorage.setItem(DEFAULT_PROMPTS_INITIALED, '1');
 
   useEffect(() => {
     if (defaultPromptsInitialed()) {
