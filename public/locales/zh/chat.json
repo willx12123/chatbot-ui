@@ -1,4 +1,7 @@
 {
+  "Welcome to Chatbot UI": "欢迎使用 Chat 机器人",
+  "Chatbot UI is an open source clone of OpenAI's ChatGPT UI.": "Chat 机器人是 OpenAI 的 ChatGPT UI 的开源克隆。",
+  "Important: Chatbot UI is 100% unaffiliated with OpenAI.": "Chat 机器人不属于 OpenAI",
   "OpenAI API Key Required": "需要 OpenAI API 密钥",
   "Please set your OpenAI API key in the bottom left of the sidebar.": "请在侧边栏左下角设置您的 OpenAI API 密钥。",
   "If you don't have an OpenAI API key, you can get one here: ": "如果你没有 OpenAI API 密钥，你可以在此获取：",
