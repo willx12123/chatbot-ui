@@ -268,7 +268,7 @@ export const ChatInput = ({
   ] = useState(false);
 
   function describeSingleMessageMode(
-    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) {
     e.stopPropagation();
     e.preventDefault();
@@ -287,7 +287,7 @@ export const ChatInput = ({
             style={{ maxWidth: '80vw' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <p className='pb-3'>
+            <p className="pb-3">
               单消息模式意味着只会发送当前的<strong>一条消息</strong>给
               ChatGPT。
             </p>
@@ -312,8 +312,7 @@ export const ChatInput = ({
           {!messageIsStreaming &&
             selectedConversation &&
             selectedConversation.messages.length > 0 && (
-              <div className="absolute top-0 left-0 right-0 w-fit mx-auto mb-3 md:mb-0 md:mt-2 flex items-center justify-center gap-5">
-                <div />
+              <div className="absolute top-0 left-0 right-0 w-fit mx-auto mb-3 md:mb-0 md:mt-2 flex items-center justify-center gap-2">
                 <button
                   className="flex items-center gap-3 rounded border border-neutral-200 bg-white py-2 px-4 text-black hover:opacity-50 dark:border-neutral-600 dark:bg-[#343541] dark:text-white"
                   onClick={onRegenerate}
@@ -322,15 +321,16 @@ export const ChatInput = ({
                 </button>
 
                 <label className="flex items-center flex-shrink-0 cursor-pointer text-white text-opacity-60 text-xs">
-                  <IconInfoCircle
-                    size="15"
-                    className="mr-2"
+                  <div
+                    className="px-2.5 py-2"
                     onClick={describeSingleMessageMode}
-                  />
+                  >
+                    <IconInfoCircle size="15" />
+                  </div>
                   单次消息模式
                   <input
                     type="checkbox"
-                    className="ml-3"
+                    className="ml-1"
                     checked={Boolean(singleMessageMode)}
                     onChange={(e) =>
                       handleSingleMessageModeChange(Boolean(e.target.checked))
